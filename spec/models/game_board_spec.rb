@@ -35,8 +35,31 @@ describe GameBoard do
       @game1.makes_move("X", 0)
       @game1.makes_move("X", 3)
       @game1.makes_move("X", 6)
-      @game1.game_result.should be_true
+      @game1.makes_move("O", 4)
+      @game1.makes_move("O", 2)
+      @game1.winner.should be_true
     end
-
+    
+    it 'does not recognize a win for non-consecutive marks' do
+      @game1.makes_move("X", 0)
+      @game1.makes_move("X", 3)
+      @game1.makes_move("O", 6)
+      @game1.winner.should be_false
+    end
+  end
+  
+  context 'draw' do
+    it 'recognizes a draw when all marks are made without a winner' do
+      @game1.makes_move("O", 0)
+      @game1.makes_move("X", 1)
+      @game1.makes_move("O", 2)
+      @game1.makes_move("O", 3)
+      @game1.makes_move("X", 4)
+      @game1.makes_move("X", 5)
+      @game1.makes_move("X", 6)
+      @game1.makes_move("O", 7)
+      @game1.makes_move("X", 8)
+      @game1.draw.should be_true
+    end
   end
 end
