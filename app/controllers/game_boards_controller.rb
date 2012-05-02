@@ -20,7 +20,7 @@ class GameBoardsController < ApplicationController
   end
   
   def computer_move
-    random_spot = rand(0..8)
+    random_spot = rand(0..8).to_i
     if @game.current_state[random_spot] == nil
       @game.current_state[random_spot] = @game.players.last.mark
     elsif @game.current_state.compact.count < 9
