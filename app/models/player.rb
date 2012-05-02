@@ -3,7 +3,7 @@ class Player < ActiveRecord::Base
   
   belongs_to :game_board
   
-  def select_mark
-    @mark = "X"
-  end
+  # def select_mark
+  #   @mark = "X"
+  # end
 end
