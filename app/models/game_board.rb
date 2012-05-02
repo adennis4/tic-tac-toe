@@ -1,5 +1,5 @@
 class GameBoard < ActiveRecord::Base
-  attr_accessible :current_state
+  attr_accessible :current_state, :selection
   serialize :current_state, Array   
   
   has_many :players
