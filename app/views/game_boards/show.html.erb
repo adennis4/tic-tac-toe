@@ -1,0 +1,44 @@
+<div class="tictactoe show">
+	<table>
+	<% x = 0 %>
+	<tr>
+		<% while x < 3 %>
+			<td class="board_spacing">
+				<% if @game.current_state[x] == nil %>
+					<%= "-" %>
+				<% else %>
+					<%= @game.current_state[x] %>
+				<% end %>
+			</td>
+			<% x += 1 %>
+		<% end %>
+	</tr>
+	
+	<tr>
+	<% while x < 6 %>
+		<td class="board_spacing">
+		<% if @game.current_state[x] == nil %>
+			<%= "-" %>
+		<% else %>
+			<%= @game.current_state[x] %>
+		<% end %>
+		</td>
+		<% x += 1 %>
+	<% end %>
+	</tr>
+
+	
+	<tr>
+	<% while x < 9 %>
+		<td class="board_spacing">
+		<% if @game.current_state[x] == nil %>
+			<%= "-" %>
+		<% else %>
+			<%= @game.current_state[x] %>
+		<% end %>
+		</td>
+		<% x += 1 %>
+	<% end %>
+	</tr>
+</table>
+</div>

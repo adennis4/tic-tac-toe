@@ -1,5 +1,8 @@
 TicTacToe::Application.routes.draw do
-  get "game_board/index"
+  resources :game_boards
+  resources :players
+  
+  root :to => "game_boards#new"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

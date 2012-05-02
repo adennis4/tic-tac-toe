@@ -1,0 +1,52 @@
+
+<div class="tictactoe">
+	<table>
+	<% x = 0 %>
+	<tr>
+		<% while x < 3 %>
+			<td class="board_spacing">
+				<% if @game.current_state[x] == nil %>
+					<%= "-" %>
+				<% else %>
+					<%= @game.current_state[x] %>
+				<% end %>
+			</td>
+			<% x += 1 %>
+		<% end %>
+	</tr>
+	
+	<tr>
+	<% while x < 6 %>
+		<td class="board_spacing">
+		<% if @game.current_state[x] == nil %>
+			<%= "-" %>
+		<% else %>
+			<%= @game.current_state[x] %>
+		<% end %>
+		</td>
+		<% x += 1 %>
+	<% end %>
+	</tr>
+
+	<tr>
+	<% while x < 9 %>
+		<td class="board_spacing">
+		<% if @game.current_state[x] == nil %>
+			<%= "-" %>
+		<% else %>
+			<%= @game.current_state[x] %>
+		<% end %>
+		</td>
+		<% x += 1 %>
+	<% end %>
+	</tr>
+</table>
+</div>
+
+
+<%= form_for Player.new do |f| %>
+	<%= f.label :mark, "Type X or O" %>
+	<%= f.text_field :mark %>
+	<%= f.hidden_field :game_board_id, :value => @game.id %>
+	<%= f.submit "Start Game" %>
+<% end %>	
