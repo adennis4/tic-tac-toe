@@ -6,7 +6,7 @@
 		<% while x < 3 %>
 			<td class="board_spacing">
 				<% if @game.current_state[x] == nil %>
-					<%= "-" %>
+					<div class="unselected"><%= "#{x}" %></div>
 				<% else %>
 					<%= @game.current_state[x] %>
 				<% end %>
@@ -19,7 +19,7 @@
 	<% while x < 6 %>
 		<td class="board_spacing">
 		<% if @game.current_state[x] == nil %>
-			<%= "-" %>
+			<div class="unselected"><%= "#{x}" %></div>
 		<% else %>
 			<%= @game.current_state[x] %>
 		<% end %>
@@ -32,7 +32,7 @@
 	<% while x < 9 %>
 		<td class="board_spacing">
 		<% if @game.current_state[x] == nil %>
-			<%= "-" %>
+			<div class="unselected"><%= "#{x}" %></div>
 		<% else %>
 			<%= @game.current_state[x] %>
 		<% end %>
