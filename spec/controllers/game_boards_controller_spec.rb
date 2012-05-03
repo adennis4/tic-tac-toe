@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GameBoardController do
+describe GameBoardsController do
   
   describe "GET new" do
     it "assigns a player and computer to each Game" do

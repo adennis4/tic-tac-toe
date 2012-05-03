@@ -1,37 +1,39 @@
 
-
-
 .tictactoe {
-	margin-top: 200px;
-	margin-right: 430px;
-	margin-left: 430px;
-	padding-left: 50px;
-	padding-right: 20px;
-	height: 313px;
-	width: 256px;
-	font: serif;
-	font-size: 70px;
-	text-align: center;
-	background-color: lightgray;
-}
-.show_display {
-	margin-top: 200px;
-	margin-right: 430px;
-	margin-left: 430px;
-	padding-left: 10px;
+	margin-top: -50px;
+	margin-right: 20px;
+	margin-left: 400px;
+	padding-left: 20px;
 	padding-right: 20px;
 	font: serif;
 	font-size: 70px;
 	text-align: center;
-	background-color: lightgray;
 }
 
-.board_spacing {
-	padding-right: 50px;
-	margin-left: 5px;
+.selector {
+	margin-top: -300px;
+	float: left;
 }
 
-.unselected {
-	font-size: 15px;
-	color: blue;
+#cell0, #cell1, #cell3, #cell4 {
+	width: 175px;
+	height: 175px;
+	border-style: none solid solid none;
+	border-width: 10px;
+}
+
+#cell2, #cell5 {
+	width: 175px;
+	height: 175px;
+	border-style: none none solid none;
+	border-width: 10px;
+	border-color: black;
+}
+
+#cell6, #cell7 {
+	width: 175x;
+	height: 175px;
+	border-style: none solid none none;	
+	border-width: 10px;
+	border-color: black;
 }

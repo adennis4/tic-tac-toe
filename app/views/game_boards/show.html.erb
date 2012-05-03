@@ -1,50 +1,95 @@
-<div class="show_display">
-	<table>
-	<% x = 0 %>
-	<tr>
-		<% while x < 3 %>
-			<td class="board_spacing">
-				<% if @game.current_state[x] == nil %>
-					<div class="unselected"><%= "#{x}" %></div>
-				<% else %>
-					<%= @game.current_state[x] %>
-				<% end %>
-			</td>
-			<% x += 1 %>
-		<% end %>
-	</tr>
-	
-	<tr>
-	<% while x < 6 %>
-		<td class="board_spacing">
-		<% if @game.current_state[x] == nil %>
-			<div class="unselected"><%= "#{x}" %></div>
-		<% else %>
-			<%= @game.current_state[x] %>
-		<% end %>
-		</td>
-		<% x += 1 %>
-	<% end %>
-	</tr>
+<head>
+	<title>Chicago Bears - Tic Tac Toe</title>
+</head>
 
+<h1>Chicago Bears - Tic Tac Toe</h1>
+
+<div class="tictactoe">
+<table cellpadding="0" cellspacing="0">
 	
-	<tr>
-	<% while x < 9 %>
-		<td class="board_spacing">
-		<% if @game.current_state[x] == nil %>
-			<div class="unselected"><%= "#{x}" %></div>
-		<% else %>
-			<%= @game.current_state[x] %>
-		<% end %>
+	<tr id="row1">
+		<td id="cell0">
+			<% if @game.current_state[0] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[0] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %></td>
+			
+		<td id="cell1">
+			<% if @game.current_state[1] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[1] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %>
 		</td>
-		<% x += 1 %>
-	<% end %>
+		
+		<td id="cell2">
+			<% if @game.current_state[2] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[2] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %>
+		</td>
+	</tr>
+	
+	<tr id="row2">
+		<td id="cell3">
+			<% if @game.current_state[3] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[3] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %>
+		</td>
+		
+		<td id="cell4">
+			<% if @game.current_state[4] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[4] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %>		
+		</td>
+		
+		<td id="cell5">
+			<% if @game.current_state[5] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[5] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %>
+		</td>
+	</tr>
+	
+	<tr id="row3">
+		<td id="cell6">
+			<% if @game.current_state[6] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[6] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %>
+		</td>
+		
+		<td id="cell7">
+			<% if @game.current_state[7] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[7] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %>
+		</td>
+		
+		<td id="cell8">
+			<% if @game.current_state[8] == "X" %>
+				<%= image_tag "orange_x.png" %>
+			<% elsif @game.current_state[8] == "O" %>
+				<%= image_tag "blue_o.png" %>
+			<% end %>
+		</td>
 	</tr>
 </table>
 </div>
 
+<div class="selector">
 <%= form_for @game do |f| %>
-	<%= f.label :selection, "Choose a box" %>
+	<p><strong><%= f.label :selection, "Choose a Number to Place your Mark" %></strong></p>
 	<%= f.text_field :selection %>
 	<%= f.submit "Select Square" %>
 <% end %>
+</div>

@@ -1,52 +1,32 @@
+<head>
+	<title>Chicago Bears - Tic Tac Toe</title>
+</head>
 
-<div class="tictactoe">
-	<table>
-	<% x = 0 %>
-	<tr>
-		<% while x < 3 %>
-			<td class="board_spacing">
-				<% if @game.current_state[x] == nil %>
-					<div class="unselected"><%= "#{x}" %></div>
-				<% else %>
-					<%= @game.current_state[x] %>
-				<% end %>
-			</td>
-			<% x += 1 %>
-		<% end %>
+<h1>Chicago Bears - Tic Tac Toe</h1>
+<table cellpadding="0" cellspacing="0">
+	
+	<tr id="row1">
+		<td id="cell0"></td>			
+		<td id="cell1"></td>		
+		<td id="cell2"></td>
 	</tr>
 	
-	<tr>
-	<% while x < 6 %>
-		<td class="board_spacing">
-		<% if @game.current_state[x] == nil %>
-			<div class="unselected"><%= "#{x}" %></div>
-		<% else %>
-			<%= @game.current_state[x] %>
-		<% end %>
-		</td>
-		<% x += 1 %>
-	<% end %>
+	<tr id="row2">
+		<td id="cell3"></td>	
+		<td id="cell4"></td>	
+		<td id="cell5"></td>
 	</tr>
-
-	<tr>
-	<% while x < 9 %>
-		<td class="board_spacing">
-		<% if @game.current_state[x] == nil %>
-			<div class="unselected"><%= "#{x}" %></div>
-		<% else %>
-			<%= @game.current_state[x] %>
-		<% end %>
-		</td>
-		<% x += 1 %>
-	<% end %>
+	
+	<tr id="row3">
+		<td id="cell6"></td>		
+		<td id="cell7"></td>		
+		<td id="cell8"></td>
 	</tr>
 </table>
-</div>
-
 
 <%= form_for Player.new do |f| %>
 	<%= f.label :mark, "Type X or O" %>
 	<%= f.text_field :mark %>
 	<%= f.hidden_field :game_board_id, :value => @game.id %>
 	<%= f.submit "Start Game" %>
-<% end %>	
+<% end %>
