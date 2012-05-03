@@ -9,7 +9,7 @@ class GameBoardsController < ApplicationController
   def show
     @game = GameBoard.find(params[:id])
     if @game.game_finished
-      flash[:notice] = "GAME OVER"
+      flash[:notice] = "GAME OVER - You WIN!!!"
     elsif @game.players.first.mark == "O" && @game.current_state.compact.count == 0
       computer_move
     end
@@ -32,7 +32,7 @@ class GameBoardsController < ApplicationController
   
   def computer_move
     if @game.game_finished
-      flash[:notice] = "GAME OVER"
+      flash[:notice] = "GAME OVER - I WIN!!!"
     else
       random_spot = rand(9)
        if @game.current_state.compact.count < 2
