@@ -7,8 +7,8 @@ class GameBoardsController < ApplicationController
   
   def show
     @game = GameBoard.find(params[:id])
-    if @game.game_finished
-      flash[:notice] = "GAME OVER - You WIN!!!"
+    if @game.game_finished && @game.winner
+      flash[:notice] = "GAME OVER - I WIN!!!"
     elsif @game.players.first.mark == "O" && @game.current_state.compact.count == 0
       computer_move
     end
@@ -31,12 +31,12 @@ class GameBoardsController < ApplicationController
   private
   
       def computer_move
-        if @game.game_finished
-          flash[:notice] = "GAME OVER - I WIN!!!"
+        if @game.draw
+          flash[:notice] = "The Game ended in a Draw.  Let's Play Again."
         else
           best_move
-         end
-       @game.save
+        end
+        @game.save
       end
   
       def best_move
