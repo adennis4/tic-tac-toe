@@ -12,7 +12,7 @@ class GameBoard < ActiveRecord::Base
     if current_state[posn] == nil
       current_state[posn] = mark
     else
-      message = "This spot was already taken. Your probably should pick a new one"
+      flash[:alert] = "This spot was already taken. Your probably should pick a new one."
     end
   end
 

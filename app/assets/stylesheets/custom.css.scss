@@ -20,6 +20,7 @@
 	height: 175px;
 	border-style: none solid solid none;
 	border-width: 10px;
+	font-size: 20px;
 }
 
 #cell2, #cell5 {
@@ -28,6 +29,7 @@
 	border-style: none none solid none;
 	border-width: 10px;
 	border-color: black;
+	font-size: 20px;
 }
 
 #cell6, #cell7 {
@@ -36,4 +38,19 @@
 	border-style: none solid none none;	
 	border-width: 10px;
 	border-color: black;
+	font-size: 20px;
+}
+
+#cell8 {
+	font-size: 20px;
+}
+
+.error {
+	color: red;
+	font-weight: bold;
+}
+
+.notice {
+	color: green;
+	font-weight: bold;
 }
