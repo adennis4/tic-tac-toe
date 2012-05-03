@@ -3,7 +3,6 @@ class GameBoardsController < ApplicationController
   def new
     @game = GameBoard.create
     @game.start_game
-    @game.save
   end
   
   def show
@@ -21,7 +20,6 @@ class GameBoardsController < ApplicationController
       mark = @game.players.first.mark 
       if @game.current_state[selection] == nil
         @game.makes_move(mark, selection)
-        @game.save
         computer_move
         redirect_to game_board_path
       else
@@ -30,30 +28,28 @@ class GameBoardsController < ApplicationController
       end
   end
   
-  def computer_move
-    if @game.game_finished
-      flash[:notice] = "GAME OVER - I WIN!!!"
-    else
-      best_move
-      
-      # random_spot = rand(9)
-      #  if @game.current_state.compact.count < 2
-      #    first_move
-      #  # else
-      #  #   best_move
-      #  # end
-      #  elsif @game.current_state[random_spot] == nil
-      #    @game.current_state[random_spot] = @game.players.last.mark
-      #  elsif @game.current_state.compact.count < 9
-      #    computer_move
-      #  else
-      #    puts "This game is OVER"
-      #  end
-     end
-   @game.save
-  end
-  
   private
+  
+      def computer_move
+        if @game.game_finished
+          flash[:notice] = "GAME OVER - I WIN!!!"
+        else
+          best_move
+         end
+       @game.save
+      end
+  
+      def best_move
+        @game.players.first.mark = "X" ? @value = -1 : @value = 1
+        if @game.current_state.compact.count < 2
+          first_move
+        else
+          current_player
+          mini_max_move(@value, 0, 0)
+          @game.current_state[@position] = @game.players.last.mark 
+        end
+      end
+
       
       def first_move
         if @game.current_state[4] == nil
@@ -62,40 +58,53 @@ class GameBoardsController < ApplicationController
           @game.current_state[0] = @game.players.last.mark
         end
       end
-      
-      def mini_max_move
-        @game.current_state[8] = @game.players.last.mark
-      end
-      
-      def best_move
-        if @game.current_state.compact.count < 2
-          first_move
-        else
-          mini_max_move
-        end
-      end
-          
-      def generate
-        initial = GameBoard.new
-        generate_moves(initial)
-        @player = 'X'
-        initial
-      end
-      
-      def generate_moves(game_state)
-        next_player = (@player == 'X' ? 'O' : 'X')
-        game_state.current_state.each_with_index do |mark_at_position, position|
-          unless mark_at_position
-            next_state = game_state.current_state.dup
-            next_state[position] = next_player
-            
-            next_game_board = GameBoard.new
-            dup_state = next_game_board.current_state = next_state
-            @player = next_player
-            game_state.minimax_moves << dup_state
-            
-            generate_moves(next_game_board)
+  
+      def mini_max_move(value, best_score, iteration)
+        @current_mark = @current_mark == "X" ? "O" : "X"
+        count = 0
+        (0..8).each do |position|
+          @score = 0
+          if @game.current_state[position] == nil
+            @game.current_state[position] = @current_mark
+            if !@game.game_finished
+              mid_game_score(value, best_score, iteration)
+            elsif @game.winner
+              final_game_score(value, iteration, position)
+            end                  
+            best_score = update_best_score(value, @score, best_score, iteration, count, position)
+            count += 1
+            @game.current_state[position] = nil
           end
         end
+        best_score
       end
-end
+  
+      def current_player
+        @current_mark = @game.players.first.mark
+      end
+      
+      def mid_game_score(value, best_score, iteration)
+        @score += mini_max_move(-@value, best_score, iteration+1)
+      end
+      
+      def final_game_score(value, iteration, position)
+        @score += value/@value
+        return @score if win_on_next_move(iteration, position)
+      end
+  
+      def update_best_score(value, score, best_score, iteration, count, position)
+        if count == 0 or (score > best_score and value == 1) or (score < best_score and value = -1)
+          best_score = score
+          @position = position if iteration == 0
+        end
+        best_score
+      end
+
+      def win_on_next_move(iteration, position)
+        if iteration == 0
+          @position = position
+          return true
+        end
+        false
+      end
+    end
