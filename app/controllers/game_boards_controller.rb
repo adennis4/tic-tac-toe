@@ -34,19 +34,21 @@ class GameBoardsController < ApplicationController
     if @game.game_finished
       flash[:notice] = "GAME OVER - I WIN!!!"
     else
-      random_spot = rand(9)
-       if @game.current_state.compact.count < 2
-         first_move
-       # else
-       #   best_move
-       # end
-       elsif @game.current_state[random_spot] == nil
-         @game.current_state[random_spot] = @game.players.last.mark
-       elsif @game.current_state.compact.count < 9
-         computer_move
-       else
-         puts "This game is OVER"
-       end
+      best_move
+      
+      # random_spot = rand(9)
+      #  if @game.current_state.compact.count < 2
+      #    first_move
+      #  # else
+      #  #   best_move
+      #  # end
+      #  elsif @game.current_state[random_spot] == nil
+      #    @game.current_state[random_spot] = @game.players.last.mark
+      #  elsif @game.current_state.compact.count < 9
+      #    computer_move
+      #  else
+      #    puts "This game is OVER"
+      #  end
      end
    @game.save
   end
@@ -58,6 +60,18 @@ class GameBoardsController < ApplicationController
           @game.current_state[4] = @game.players.last.mark
         else
           @game.current_state[0] = @game.players.last.mark
+        end
+      end
+      
+      def mini_max_move
+        @game.current_state[8] = @game.players.last.mark
+      end
+      
+      def best_move
+        if @game.current_state.compact.count < 2
+          first_move
+        else
+          mini_max_move
         end
       end
           
