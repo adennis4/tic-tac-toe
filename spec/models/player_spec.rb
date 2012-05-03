@@ -6,7 +6,4 @@ describe Player do
     @player1.select_mark
   end
   
-  it 'selects X or O' do
-    @player1.mark = "X"
-  end
 end
