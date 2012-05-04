@@ -23,7 +23,7 @@ class GameBoardsController < ApplicationController
         computer_move
         redirect_to game_board_path
       else
-        flash[:error] = "This spot was already taken. Your probably should pick a new one."
+        flash[:error] = "This spot was already taken. You probably should pick a new one."
         redirect_to game_board_path
       end
   end
@@ -40,11 +40,10 @@ class GameBoardsController < ApplicationController
       end
   
       def best_move
-        @game.players.first.mark = "X" ? @value = -1 : @value = 1
+        @game.players.first.mark = "X" ? @value = 1 : @value = -1
         if @game.current_state.compact.count < 2
           first_move
         else
-          current_player
           mini_max_move(@value, 0, 0)
           @game.current_state[@position] = @game.players.last.mark 
         end
@@ -63,37 +62,29 @@ class GameBoardsController < ApplicationController
         @current_mark = @current_mark == "X" ? "O" : "X"
         count = 0
         (0..8).each do |position|
-          @score = 0
+          score = 0
           if @game.current_state[position] == nil
             @game.current_state[position] = @current_mark
             if !@game.game_finished
-              mid_game_score(value, best_score, iteration)
-            elsif @game.winner
-              final_game_score(value, iteration, position)
+              score += mini_max_move(-value, best_score, iteration+1)
+              puts "*****************#{best_score}"
+            else
+              if @game.winner
+                score += value/@value
+                return score if win_on_next_move(iteration, position)
+                puts "#{@game.winner}"
+              end
             end                  
-            best_score = update_best_score(value, @score, best_score, iteration, count, position)
+            best_score = update_best_score(value, score, best_score, iteration, count, position)
             count += 1
             @game.current_state[position] = nil
           end
         end
         best_score
       end
-  
-      def current_player
-        @current_mark = @game.players.first.mark
-      end
       
-      def mid_game_score(value, best_score, iteration)
-        @score += mini_max_move(-@value, best_score, iteration+1)
-      end
-      
-      def final_game_score(value, iteration, position)
-        @score += value/@value
-        return @score if win_on_next_move(iteration, position)
-      end
-  
       def update_best_score(value, score, best_score, iteration, count, position)
-        if count == 0 or (score > best_score and value == 1) or (score < best_score and value = -1)
+        if count == 0 or (score > best_score and value == @value) or (score < best_score and value = @value)
           best_score = score
           @position = position if iteration == 0
         end

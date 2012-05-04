@@ -8,9 +8,9 @@ class GameBoard < ActiveRecord::Base
     self.current_state = Array.new(9)
   end
   
-  def makes_move(mark, posn)
-    if current_state[posn] == nil
-      current_state[posn] = mark
+  def makes_move(mark, position)
+    if current_state[position] == nil
+      current_state[position] = mark
     else
       flash[:alert] = "This spot was already taken. Your probably should pick a new one."
     end
@@ -20,10 +20,10 @@ class GameBoard < ActiveRecord::Base
     winning_combos = [ [0, 1, 2], [3, 4, 5], [6, 7, 8],
                        [0, 3, 6], [1, 4, 7], [2, 5, 8],
                        [0, 4, 8], [2, 4, 6] ]
-    winner = winning_combos.map { |w_combo|
-                                             (current_state[w_combo[0]] != nil && 
-                                              current_state[w_combo[0]] == current_state[w_combo[1]] &&
-                                              current_state[w_combo[1]] == current_state[w_combo[2]]) || nil
+    winner = winning_combos.map { |winning_combo|
+                                             (current_state[winning_combo[0]] != nil && 
+                                              current_state[winning_combo[0]] == current_state[winning_combo[1]] &&
+                                              current_state[winning_combo[1]] == current_state[winning_combo[2]]) || nil
                                              }
     winner.include? true
   end
