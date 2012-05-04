@@ -3,18 +3,14 @@ require 'spec_helper'
 describe GameBoardsController do
   
   describe "GET new" do
+    it "returns http success" do
+      get :new
+      response.should be_success
+    end
+    
     it "assigns a player and computer to each Game" do
       get :new
-      assigns(:current_state).count.should eq(9)
+      assigns(:game).should be_instance_of(GameBoard)
     end
   end
-  
-  describe "GET index" do
-    it "displays the current_state of the Game" do
-      makes_move()
-      get :index
-      assigns(:current_state).count.should eq(2)
-    end
-  end
-
 end

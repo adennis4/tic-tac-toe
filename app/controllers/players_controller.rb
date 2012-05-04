@@ -3,7 +3,6 @@ class PlayersController < ApplicationController
   def create
     game = GameBoard.find(params[:player][:game_board_id])
     @player = game.players.create(:mark => params[:player][:mark])
-    
     if @player.mark == "X"
       game.players.create(:mark => "O")
       flash[:notice] = flash_x
