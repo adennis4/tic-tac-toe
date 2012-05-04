@@ -9,11 +9,7 @@ class GameBoard < ActiveRecord::Base
   end
   
   def makes_move(mark, position)
-    if current_state[position] == nil
-      current_state[position] = mark
-    else
-      flash[:alert] = "This spot was already taken. Your probably should pick a new one."
-    end
+    current_state[position] = mark
   end
 
   def winner
