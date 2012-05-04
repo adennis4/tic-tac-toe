@@ -7,8 +7,8 @@ class GameBoardsController < ApplicationController
   
   def show
     @game = GameBoard.find(params[:id])
-    if @game.game_finished && @game.winner
-      flash[:notice] = "GAME OVER - I WIN!!!"
+    if @game.game_finished
+      flash[:notice] = "GAME OVER"
     elsif @game.players.first.mark == "O" && @game.current_state.compact.count == 0
       computer_move
     end
@@ -16,26 +16,26 @@ class GameBoardsController < ApplicationController
   
   def update
     @game = GameBoard.find(params[:id])
-      selection = (params[:game_board][:selection]).to_i
-      mark = @game.players.first.mark 
-      if @game.current_state[selection] == nil
-        @game.makes_move(mark, selection)
-        computer_move
-        redirect_to game_board_path
-      else
-        flash[:error] = "This spot was already taken. You probably should pick a new one."
-        redirect_to game_board_path
-      end
+    selection = (params[:game_board][:selection]).to_i
+    mark = @game.players.first.mark 
+    if @game.current_state[selection] == nil
+      @game.makes_move(mark, selection)
+      computer_move
+    else
+      flash[:error] = "This spot was already taken. You probably should pick a new one."
+      redirect_to game_board_path
+    end
   end
   
   private
   
       def computer_move
-        if @game.draw
-          flash[:notice] = "The Game ended in a Draw.  Let's Play Again."
+        if @game.game_finished
+          flash[:notice] = "GAME OVER"
         else
           best_move
         end
+        redirect_to game_board_path
         @game.save
       end
   
@@ -48,7 +48,6 @@ class GameBoardsController < ApplicationController
           @game.current_state[@position] = @game.players.last.mark 
         end
       end
-
       
       def first_move
         if @game.current_state[4] == nil
@@ -67,12 +66,10 @@ class GameBoardsController < ApplicationController
             @game.current_state[position] = @current_mark
             if !@game.game_finished
               score += mini_max_move(-value, best_score, iteration+1)
-              puts "*****************#{best_score}"
             else
               if @game.winner
                 score += value/@value
                 return score if win_on_next_move(iteration, position)
-                puts "#{@game.winner}"
               end
             end                  
             best_score = update_best_score(value, score, best_score, iteration, count, position)
