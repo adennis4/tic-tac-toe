@@ -75,7 +75,7 @@ class GameBoard < ActiveRecord::Base
             return score if win_on_next_move(iteration, position)
           end
         end    
-        score = abc.inject{ |sum, b| sum + b }       
+        score = score_array.inject{ |sum, b| sum + b }       
         best_score = update_best_score(value, score, best_score, iteration, count, position)
         count += 1
         current_state[position] = nil
