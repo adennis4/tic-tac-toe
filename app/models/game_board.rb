@@ -71,7 +71,7 @@ class GameBoard < ActiveRecord::Base
         else
           if winner
             score_array << value
-            score = abc.inject{ |sum, b| sum + b }
+            score = score_array.inject{ |sum, b| sum + b }
             return score if win_on_next_move(iteration, position)
           end
         end    
