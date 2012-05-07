@@ -42,7 +42,7 @@ class GameBoard < ActiveRecord::Base
   end
 
   def best_move
-    players.first.mark = "X" ? @value = 1 : @value = -1
+    players.first.mark = "X" ? @value = -1 : @value = 1
     if current_state.compact.count < 2
       first_move
     else
@@ -63,17 +63,19 @@ class GameBoard < ActiveRecord::Base
     @current_mark = @current_mark == "X" ? "O" : "X"
     count = 0
     (0..8).each do |position|
-      score = 0
+      abc = [0]
       if current_state[position] == nil
         current_state[position] = @current_mark
         if !game_finished
-          score += mini_max_move(-value, best_score, iteration+1)
+          abc << mini_max_move(-value, best_score, iteration+1)
         else
           if winner
-            score += value/@value
+            abc << value
+            score = abc.inject{ |sum, b| sum + b }
             return score if win_on_next_move(iteration, position)
           end
-        end                  
+        end    
+        score = abc.inject{ |sum, b| sum + b }       
         best_score = update_best_score(value, score, best_score, iteration, count, position)
         count += 1
         current_state[position] = nil
