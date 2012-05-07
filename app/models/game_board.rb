@@ -63,14 +63,14 @@ class GameBoard < ActiveRecord::Base
     @current_mark = @current_mark == "X" ? "O" : "X"
     count = 0
     (0..8).each do |position|
-      abc = [1]
+      score_array = [1]
       if current_state[position] == nil
         current_state[position] = @current_mark
         if !game_finished
-          abc << mini_max_move(-value, best_score, iteration+1)
+          score_array << mini_max_move(-value, best_score, iteration+1)
         else
           if winner
-            abc << value
+            score_array << value
             score = abc.inject{ |sum, b| sum + b }
             return score if win_on_next_move(iteration, position)
           end
