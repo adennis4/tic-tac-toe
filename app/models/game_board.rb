@@ -63,7 +63,7 @@ class GameBoard < ActiveRecord::Base
     @current_mark = @current_mark == "X" ? "O" : "X"
     count = 0
     (0..8).each do |position|
-      abc = [0]
+      abc = [1]
       if current_state[position] == nil
         current_state[position] = @current_mark
         if !game_finished
