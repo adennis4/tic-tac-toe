@@ -1,0 +1,9 @@
+<td id=<%= "cell" + @n.to_s %>>
+	<% if @game.current_state[@n] == "X" %>
+		<%= image_tag "orange_x.png" %>
+	<% elsif @game.current_state[@n] == "O" %>
+		<%= image_tag "blue_o.png" %>
+	<% else %>
+			<%= @n %>
+	<% end %>
+</td>
