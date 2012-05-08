@@ -20,18 +20,11 @@ describe GameBoard do
     it 'marks a given position' do
       @game1.makes_move("X", 1)
       @game1.current_state[1].should == "X"
-    end
-    
-    it 'raises an error for a position that is already taken' do
-      good_move = @game1.makes_move("X", 4)
-      bad_move  = @game1.makes_move("X", 4)
-      
-      bad_move.should be_instance_of(String)
-    end
+    end 
   end
   
   context 'win' do
-    it 'recognizes a win for three consecutive marks' do
+    it 'returns true when game state matches a winning combo' do
       @game1.makes_move("X", 0)
       @game1.makes_move("X", 3)
       @game1.makes_move("X", 6)
@@ -40,7 +33,7 @@ describe GameBoard do
       @game1.winner.should be_true
     end
     
-    it 'does not recognize a win for non-consecutive marks' do
+    it 'returns false when not a win' do
       @game1.makes_move("X", 0)
       @game1.makes_move("X", 3)
       @game1.makes_move("O", 6)
@@ -49,7 +42,7 @@ describe GameBoard do
   end
   
   context 'draw' do
-    it 'recognizes a draw when all marks are made without a winner' do
+    it 'returns true when all marks are made without a winner' do
       @game1.makes_move("O", 0)
       @game1.makes_move("X", 1)
       @game1.makes_move("O", 2)
@@ -62,7 +55,7 @@ describe GameBoard do
       @game1.draw.should be_true
     end
     
-    it 'does not claim a draw when a winner is made on the last possible move' do
+    it 'returns false when a winner is made on the last possible move' do
       @game1.makes_move("O", 0)
       @game1.makes_move("X", 1)
       @game1.makes_move("O", 2)
@@ -77,13 +70,13 @@ describe GameBoard do
   end
   
   context 'game_finished' do
-    it 'recognizes the game is over with a win' do
+    it 'returns true if game is over with a win' do
       @game1.current_state = ["X", "X", "X", "O", "O", nil, nil, nil, nil]
       @game1.game_finished
       @game1.game_finished.should be_true
     end
     
-    it 'recognizes the game is over with a draw' do
+    it 'returns true if game is over with a draw' do
       @game1.current_state = ["O", "X", "O", "O", "X", "X", "X", "O", "X"]
       @game1.game_finished
       @game1.game_finished.should be_true
@@ -104,4 +97,24 @@ describe GameBoard do
       @game1.current_state[0].should eq("X")
     end
   end
+  
+  context 'best_move' do
+    it "calls first_move if it is computers first move" do
+      Player.create(:game_board_id => @game1.id, :mark => "X")
+      @game1.best_move
+      @game1.current_state[4].should eq("X")
+    end
+  end
+  
+  context 'win_on_next_move' do
+    it 'returns true if win is on next move' do
+      @game1.win_on_next_move(0, 8).should be_true
+    end
+    
+    it 'returns false if win is not on next move' do
+      @game1.win_on_next_move(1, 8).should be_false
+    end
+  end
+  
+  
 end

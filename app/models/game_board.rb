@@ -45,9 +45,25 @@ class GameBoard < ActiveRecord::Base
     players.first.mark = "X" ? @value = -1 : @value = 1
     if current_state.compact.count < 2
       first_move
+    elsif current_state.compact.count == 4
+      special_case_move
     else
       mini_max_move(@value, 0, 0)
       current_state[@position] = players.last.mark 
+    end
+  end
+  
+  # I hate doing this.  However, I have found only one vulnerability left in the minimax algorithm.
+  # Until that is solved...this handles those two scenarios
+  def special_case_move
+    if current_state[0, 7] == ["O", "O", nil, nil, "X", nil, "X"] 
+      current_state[2] = ["X"]
+    elsif current_state[1, 7] == ["O", "O", nil "X", nil, "X"]
+      current_state[0] = ["X"]
+    elsif current_state[0, 7] == ["O", nil, "O", nil "X", nil, "X"]
+      current_state[1] = ["X"]
+    else
+      mini_max_move(@value, 0, 0)
     end
   end
 
@@ -87,7 +103,7 @@ class GameBoard < ActiveRecord::Base
   def update_best_score(value, score, best_score, iteration, count, position)
     if count == 0 or (score > best_score and value == @value) or (score < best_score and value = @value)
       best_score = score
-      @position = position if iteration == 0
+      @position = position #if iteration == 0
     end
     best_score
   end
