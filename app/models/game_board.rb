@@ -53,17 +53,20 @@ class GameBoard < ActiveRecord::Base
     end
   end
   
-  # I hate doing this.  However, I have found only one vulnerability left in the minimax algorithm.
+  # I hate doing this.  However, I have found only one vulnerability left in the minimax algorithm 
+  # causing it to lose.
   # Until that is solved...this handles those two scenarios
+  
   def special_case_move
-    if current_state[0, 7] == ["O", "O", nil, nil, "X", nil, "X"] 
-      current_state[2] = ["X"]
-    elsif current_state[1, 7] == ["O", "O", nil "X", nil, "X"]
-      current_state[0] = ["X"]
-    elsif current_state[0, 7] == ["O", nil, "O", nil "X", nil, "X"]
-      current_state[1] = ["X"]
+    if current_state[6] == "X" and current_state[1,2] == ["O", "O"]
+      current_state[0] = "X"
+    elsif current_state[6] == "X" and current_state[0,2] == ["O", "O"]
+      current_state[2] = "X"
+    elsif current_state[6] == "X" and current_state[0,3].compact == ["O", "O"]
+      current_state[1] = "X"
     else
       mini_max_move(@value, 0, 0)
+      current_state[@position] = players.last.mark
     end
   end
 
