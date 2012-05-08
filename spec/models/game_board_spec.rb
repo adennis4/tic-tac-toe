@@ -61,5 +61,47 @@ describe GameBoard do
       @game1.makes_move("X", 8)
       @game1.draw.should be_true
     end
+    
+    it 'does not claim a draw when a winner is made on the last possible move' do
+      @game1.makes_move("O", 0)
+      @game1.makes_move("X", 1)
+      @game1.makes_move("O", 2)
+      @game1.makes_move("O", 3)
+      @game1.makes_move("X", 4)
+      @game1.makes_move("X", 5)
+      @game1.makes_move("X", 8)
+      @game1.makes_move("O", 7)
+      @game1.makes_move("O", 6)
+      @game1.draw.should be_false
+    end     
+  end
+  
+  context 'game_finished' do
+    it 'recognizes the game is over with a win' do
+      @game1.current_state = ["X", "X", "X", "O", "O", nil, nil, nil, nil]
+      @game1.game_finished
+      @game1.game_finished.should be_true
+    end
+    
+    it 'recognizes the game is over with a draw' do
+      @game1.current_state = ["O", "X", "O", "O", "X", "X", "X", "O", "X"]
+      @game1.game_finished
+      @game1.game_finished.should be_true
+    end
+  end
+  
+  context 'first_move' do
+    it 'selects the 4th board position if open' do
+      Player.create(:game_board_id => @game1.id, :mark => "X")
+      @game1.first_move
+      @game1.current_state[4].should eq("X")
+    end
+    
+    it 'selects the 0th board position if the 4th is taken' do
+      Player.create(:game_board_id => @game1.id, :mark => "X")
+      @game1.makes_move("O", 4)
+      @game1.first_move
+      @game1.current_state[0].should eq("X")
+    end
   end
 end
