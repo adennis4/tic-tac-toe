@@ -53,9 +53,7 @@ class GameBoard < ActiveRecord::Base
     end
   end
   
-  # I hate doing this.  However, I have found only one vulnerability left in the minimax algorithm 
-  # causing it to lose.
-  # Until that is solved...this handles those two scenarios
+  # I hate doing this.  Handles a special case scenario.
   
   def special_case_move
     if current_state[6] == "X" and current_state[1,2] == ["O", "O"]
