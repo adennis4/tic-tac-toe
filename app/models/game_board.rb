@@ -42,7 +42,8 @@ class GameBoard < ActiveRecord::Base
   end
 
   def best_move
-    players.first.mark = "X" ? @value = -1 : @value = 1
+    players.first.mark == "X" ? @value = -1 : @value = 1
+    @current_mark = players.first.mark
     if current_state.compact.count < 2
       first_move
     elsif current_state.compact.count == 4
