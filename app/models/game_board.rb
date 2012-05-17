@@ -12,7 +12,7 @@ class GameBoard < ActiveRecord::Base
     current_state[position] = mark
   end
 
-  def winner
+  def winner?
     winning_combos = [ [0, 1, 2], [3, 4, 5], [6, 7, 8],
                        [0, 3, 6], [1, 4, 7], [2, 5, 8],
                        [0, 4, 8], [2, 4, 6] ]
@@ -24,16 +24,16 @@ class GameBoard < ActiveRecord::Base
     winner.include? true
   end
   
-  def draw
-    current_state.compact.count == 9 && winner == false ? true : false
+  def draw?
+    current_state.compact.count == 9 && !winner?
   end
   
-  def game_finished
-    winner || draw
+  def game_finished?
+    winner? || draw?
   end
   
   def computer_move
-    if game_finished
+    if game_finished?
       save
     else
       best_move
@@ -46,26 +46,10 @@ class GameBoard < ActiveRecord::Base
     @current_mark = players.first.mark
     if current_state.compact.count < 2
       first_move
-    elsif current_state.compact.count == 4
-      special_case_move
     else
-      mini_max_move(@value, 0, 0)
-      current_state[@position] = players.last.mark 
-    end
-  end
-  
-  # I hate doing this.  Handles a special case scenario.
-  
-  def special_case_move
-    if current_state[6] == "X" and current_state[1,2] == ["O", "O"]
-      current_state[0] = "X"
-    elsif current_state[6] == "X" and current_state[0,2] == ["O", "O"]
-      current_state[2] = "X"
-    elsif current_state[6] == "X" and current_state[0,3].compact == ["O", "O"]
-      current_state[1] = "X"
-    else
-      mini_max_move(@value, 0, 0)
-      current_state[@position] = players.last.mark
+      best_move = mini_max_move(players.last.mark)
+      current_state[best_move] = players.last.mark
+      #current_state[@position] = players.last.mark 
     end
   end
 
@@ -77,44 +61,72 @@ class GameBoard < ActiveRecord::Base
     end
   end
 
-  def mini_max_move(value, best_score, iteration)
-    @current_mark = @current_mark == "X" ? "O" : "X"
-    count = 0
-    (0..8).each do |position|
-      score_array = [1]
-      if current_state[position] == nil
-        current_state[position] = @current_mark
-        if !game_finished
-          score_array << mini_max_move(-value, best_score, iteration+1)
-        else
-          if winner
-            score_array << value
-            score = score_array.inject{ |sum, b| sum + b }
-            return score if win_on_next_move(iteration, position)
+  def mini_max_move(player_mark)
+    best_score = -10
+    best_move = -1
+      (0..8).each do |position|
+        if current_state[position] == nil
+          next_state = current_state.clone
+          next_state[position] = player_mark
+          score = check_score(next_state, 0, player_mark)
+          if score > best_score
+            best_score = score
+            best_move = position
           end
-        end    
-        score = score_array.inject{ |sum, b| sum + b }       
-        best_score = update_best_score(value, score, best_score, iteration, count, position)
-        count += 1
-        current_state[position] = nil
+        end
+      end  
+    return best_move
+  end
+  
+  def check_score(simulation_state, iteration, player_mark)
+    iteration += 1
+    score_array = []
+    player_mark = (player_mark == 'X' ? 'O' : 'X')
+    
+    if trial_game_finished?(simulation_state)
+      if trial_winner?(simulation_state) && iteration % 2 == 1
+        score = (10 - iteration)
+      elsif trial_winner?(simulation_state) && iteration % 2 == 0
+        score = -(10 - iteration)
+      else
+        score = 0
+      end
+      return score
+    end
+    
+    (0..8).each do |position|
+      score_array[position] = 0
+      if simulation_state[position] == nil
+        next_state = simulation_state.clone
+        next_state[position] = player_mark
+        score_array[position] = check_score(next_state, iteration, player_mark)
       end
     end
-    best_score
-  end
-
-  def update_best_score(value, score, best_score, iteration, count, position)
-    if count == 0 or (score > best_score and value == @value) or (score < best_score and value = @value)
-      best_score = score
-      @position = position #if iteration == 0
+    
+    if iteration % 2 == 0
+      score_array.max
+    else
+      score_array.min
     end
-    best_score
   end
-
-  def win_on_next_move(iteration, position)
-    if iteration == 0
-      @position = position
-      return true
-    end
-    false
+  
+  def trial_game_finished?(simulation_state)
+    trial_winner?(simulation_state) || trial_draw?(simulation_state)
+  end
+  
+  def trial_winner?(simulation_state)
+    winning_combos = [ [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                       [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                       [0, 4, 8], [2, 4, 6] ]
+    winner = winning_combos.map { |winning_combo|
+                                             (simulation_state[winning_combo[0]] != nil && 
+                                              simulation_state[winning_combo[0]] == simulation_state[winning_combo[1]] &&
+                                              simulation_state[winning_combo[1]] == simulation_state[winning_combo[2]]) || nil
+                                             }
+    winner.include? true
+  end
+  
+  def trial_draw?(simulation_state)
+    simulation_state.compact.count == 9 && !trial_winner?(simulation_state)
   end
 end

@@ -7,7 +7,7 @@ class GameBoardsController < ApplicationController
   
   def show
     @game = GameBoard.find(params[:id])
-    if @game.game_finished
+    if @game.game_finished?
       flash[:notice] = "GAME OVER"
     elsif @game.players.first.mark == "O" && @game.current_state.compact.count == 0
       @game.computer_move
